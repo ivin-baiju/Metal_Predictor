@@ -8,3 +8,6 @@ __MACOSX/
 .netlify/
 npm-debug.log*
 *.log
+
+Icon?
+Icon
