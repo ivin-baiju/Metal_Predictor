@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legal &amp; Compliance — Metal Prediction</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            brand: ['"DM Serif Display"', 'Georgia', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ink: '#0A0E17',
+            alabaster: '#F4F5F7',
+            volt: { DEFAULT: '#D4FF59', hover: '#C5F442' },
+            azure: { deep: '#0758A8', mid: '#0E7CE6' },
+            obsidian: '#0F1319',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #FFFFFF;
+      color: #0A0E17;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .legal-section {
+      scroll-margin-top: 96px;
+    }
+
+    .legal-tab.is-active {
+      background-color: #0A0E17;
+      color: #D4FF59;
+      border-color: #0A0E17;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white text-ink selection:bg-volt selection:text-ink">
+
+  <!-- Top Header -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <a href="/" class="flex items-center gap-2.5 group">
+        <img src="/logo.svg" alt="Metal Prediction" class="w-9 h-9 rounded-[9px] shadow-sm shrink-0" />
+        <div>
+          <div class="font-brand text-lg text-ink leading-tight">Metal Prediction</div>
+          <div class="text-[10.5px] font-mono text-slate-500">Legal, Risk &amp; Regulatory Compliance</div>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-2">
+        <a href="/#supportSection"
+          class="px-3.5 py-2 rounded-full border border-slate-200 hover:border-slate-300 text-xs font-semibold text-slate-700 hover:text-ink transition-colors">
+          Support &amp; FAQ
+        </a>
+        <a href="/"
+          class="px-4 py-2 rounded-full bg-ink hover:bg-slate-800 text-volt font-display font-bold text-xs tracking-wide transition-colors">
+          ← Back to Terminal
+        </a>
+      </div>
+    </div>
+
+    <!-- Section Jump Bar -->
+    <nav aria-label="Legal Documents Navigation" class="max-w-5xl mx-auto px-4 sm:px-8 pb-3 flex flex-wrap gap-2">
+      <a href="#disclaimer" data-legal-tab="disclaimer"
+        class="legal-tab px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:text-ink transition-colors">
+        Financial &amp; AI Disclaimer
+      </a>
+      <a href="#privacy" data-legal-tab="privacy"
+        class="legal-tab px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:text-ink transition-colors">
+        Privacy Policy (GDPR &amp; DPDP)
+      </a>
+      <a href="#terms" data-legal-tab="terms"
+        class="legal-tab px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:text-ink transition-colors">
+        Terms &amp; Conditions
+      </a>
+      <a href="#cookies" data-legal-tab="cookies"
+        class="legal-tab px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:text-ink transition-colors">
+        Cookie Policy &amp; Preferences
+      </a>
+    </nav>
+  </header>
+
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-8 py-10 space-y-12">
+
+    <!-- Page Intro -->
+    <div class="rounded-3xl bg-alabaster border border-slate-200 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="text-[11px] font-mono font-bold uppercase tracking-wider text-azure-mid">Effective Date: November 25, 2026</div>
+        <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-ink tracking-tight mt-1">
+          Regulatory Disclosures, Privacy &amp; Terms of Service
+        </h1>
+        <p class="text-sm text-slate-600 mt-1.5 max-w-2xl">
+          Governs access to Metal Prediction multi-horizon forecasting models, Global–MCX landed parity tools, FinBERT NLP sentiment feeds, and the local MetalNLP-v1 AI assistant.
+        </p>
+      </div>
+      <div class="shrink-0 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-xs font-mono text-slate-600">
+        Universe: Au · Ag · Pt · Cu · Al
+      </div>
+    </div>
+
+    <!-- 1. FINANCIAL & AI PREDICTION DISCLAIMER -->
+    <section id="disclaimer" class="legal-section rounded-3xl border border-amber-200 bg-amber-50/50 p-6 sm:p-8 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 font-mono font-bold text-[11px] uppercase">
+          Critical Regulatory Notice
+        </span>
+        <span class="text-xs font-mono text-slate-500">Section 01 · Non-SEBI Registered</span>
+      </div>
+
+      <h2 class="font-display font-bold text-xl sm:text-2xl text-ink">
+        1. Financial &amp; AI Prediction Disclaimer
+      </h2>
+
+      <div class="p-4 rounded-2xl bg-white border border-amber-200 text-sm text-ink leading-relaxed">
+        <strong>Algorithmic Estimates Only — Not Financial Advice:</strong> All price trajectories, 95% confidence intervals, directional accuracy scores, R² validation figures, Global–MCX landed parity estimates, customs/GST simulations, FinBERT sentiment scores, and MetalNLP-v1 AI responses displayed on <strong>Metal Prediction</strong> are algorithmic statistical outputs generated strictly for <strong>informational, educational, and quantitative research purposes</strong>.
+      </div>
+
+      <ul class="space-y-2.5 text-sm text-slate-700 leading-relaxed list-disc pl-5">
+        <li>
+          <strong>Non-SEBI Registered Entity (India &amp; Global Notice):</strong> Metal Prediction, its creators, and its automated AI assistants are <strong>not registered</strong> with the Securities and Exchange Board of India (SEBI) as an Investment Adviser (IA) or Research Analyst (RA), nor with the CFTC, NFA, SEC, FCA, or any commodities exchange (MCX, COMEX, LME). Nothing on this platform constitutes personalized investment, trading, hedging, tax, or legal advice, nor a solicitation to buy or sell commodity futures, options, ETFs, or physical bullion.
+        </li>
+        <li>
+          <strong>No Guarantee of Future Performance:</strong> Walk-forward validation metrics (such as Out-of-Sample R² and directional hit rates across Gold, Silver, Platinum, Copper, and Aluminium) reflect historical statistical backtests and do not guarantee future market prices or trading returns. Sudden macro shocks, central bank policy shifts, geopolitical events, customs duty revisions, and USD/INR currency swings can invalidate model projections without notice.
+        </li>
+        <li>
+          <strong>Independent Verification Required:</strong> Users must consult a SEBI-registered investment adviser or licensed financial professional and verify live exchange quotes, customs notifications, and GST schedules before executing any commercial or financial transaction.
+        </li>
+      </ul>
+    </section>
+
+    <!-- 2. PRIVACY POLICY -->
+    <section id="privacy" class="legal-section rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-mono font-bold text-[11px] uppercase">
+          GDPR &amp; India DPDP Act 2023 Aligned
+        </span>
+        <span class="text-xs font-mono text-slate-500">Section 02 · Data Governance</span>
+      </div>
+
+      <h2 class="font-display font-bold text-xl sm:text-2xl text-ink">
+        2. Privacy Policy
+      </h2>
+
+      <p class="text-sm text-slate-600 leading-relaxed">
+        We process personal and technical data transparently in accordance with the European Union General Data Protection Regulation (<strong>GDPR</strong>) and India’s Digital Personal Data Protection Act, 2023 (<strong>DPDP Act</strong>).
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-2xl bg-alabaster border border-slate-200 p-4 space-y-2">
+          <h3 class="font-display font-bold text-sm text-ink">A. Categories of Data Collected</h3>
+          <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc pl-4">
+            <li><strong>Contact &amp; Feedback Data:</strong> Name, email address, topic, selected metal, and message content voluntarily submitted through the Support &amp; Feedback form.</li>
+            <li><strong>Watchlist &amp; Functional Preferences:</strong> Selected metal, display currency (MCX INR / Global USD), and forecast horizon stored locally in browser storage when Functional preferences are enabled.</li>
+            <li><strong>AI Query History &amp; Session ID:</strong> Prompts sent to the local MetalNLP-v1 Copilot along with an ephemeral browser <code>sessionStorage</code> UUID and active chart context.</li>
+            <li><strong>IP &amp; Security Telemetry:</strong> Request IP addresses processed temporarily in memory for abuse prevention and rate limiting (15 requests/minute on <code>/api/chat</code>), plus aggregate performance metrics only if Analytics consent is enabled.</li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl bg-alabaster border border-slate-200 p-4 space-y-2">
+          <h3 class="font-display font-bold text-sm text-ink">B. Third-Party Services &amp; Data Retention</h3>
+          <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc pl-4">
+            <li><strong>Self-Hosted AI &amp; Static Infrastructure:</strong> Chat inference runs 100% locally on our self-hosted trained <code>MetalNLP-v1</code> classifier without transmitting prompts to paid third-party LLM APIs. Static UI libraries and fonts load via Google Fonts, Tailwind CDN, jsDelivr, and unpkg.</li>
+            <li><strong>Retention Windows:</strong> Chat session IDs live in ephemeral server memory and expire upon server restart or session end. Rate-limit IP windows auto-purge every 60 seconds. Support/feedback tickets are retained only as long as necessary to resolve your request (maximum 12 months).</li>
+            <li><strong>No Sale of Personal Data:</strong> Metal Prediction never sells, rents, or brokers user emails, query histories, or watchlists to third-party advertisers.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3">
+        <h3 class="font-display font-bold text-sm text-ink">C. Your Rights &amp; Data Deletion (GDPR Arts. 15–21 &amp; DPDP Act Secs. 11–14)</h3>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          You have the right to access information about processed data, request correction or erasure of submitted support messages, withdraw non-essential consent at any time, nominate an authorized representative (under DPDP), and lodge a complaint with a competent supervisory authority or the Data Protection Board of India.
+        </p>
+        <div class="flex flex-wrap items-center gap-3 pt-1">
+          <button type="button" onclick="clearAllLocalBrowserData()"
+            class="px-4 py-2 rounded-full bg-ink hover:bg-slate-800 text-volt font-display font-bold text-xs cursor-pointer transition-colors">
+            Delete Local Browser Data &amp; Preferences
+          </button>
+          <a href="/#supportSection"
+            class="px-4 py-2 rounded-full border border-slate-300 hover:border-ink text-xs font-semibold text-ink transition-colors">
+            Submit Formal Erasure Request →
+          </a>
+          <span id="localClearStatus" class="text-xs font-mono text-emerald-700 hidden">
+            Local storage &amp; session data cleared.
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TERMS & CONDITIONS -->
+    <section id="terms" class="legal-section rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-mono font-bold text-[11px] uppercase">
+          Platform Governance
+        </span>
+        <span class="text-xs font-mono text-slate-500">Section 03 · Terms of Use</span>
+      </div>
+
+      <h2 class="font-display font-bold text-xl sm:text-2xl text-ink">
+        3. Terms &amp; Conditions
+      </h2>
+
+      <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+        <p>
+          <strong>Acceptable Use:</strong> By accessing Metal Prediction, you agree to use the platform solely for lawful personal, academic, or internal quantitative research purposes. You may not misrepresent platform outputs as regulated investment advice or redistribute live terminal views as a commercial data feed.
+        </p>
+        <p>
+          <strong>Scraping, Automation &amp; API Restrictions:</strong> Automated web scraping, headless harvesting, credential stuffing, or circumventing rate limits on <code>/api/chat</code>, <code>/api/contact</code>, or static assets is strictly prohibited. Excessive automated traffic may result in temporary or permanent IP blocking.
+        </p>
+        <p>
+          <strong>Intellectual Property:</strong> All brand marks (including the Metal Prediction name and logo), visual layouts, ensemble model descriptions, Global–MCX parity calculators, and source code remain the exclusive intellectual property of Metal Prediction and its licensors.
+        </p>
+        <div class="p-4 rounded-2xl bg-alabaster border border-slate-200">
+          <strong class="text-ink">Strict Limitation of Liability:</strong> THE PLATFORM, ALL 5-METAL FORECASTS, PARITY CALCULATIONS, SIMULATIONS, AND AI RESPONSES ARE PROVIDED ON AN <strong>“AS IS” AND “AS AVAILABLE”</strong> BASIS WITHOUT WARRANTIES OF ANY KIND. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, METAL PREDICTION SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES—INCLUDING TRADING LOSSES, LOST PROFITS, MARGIN CALLS, HEDGING SLIPPAGE, OR BUSINESS INTERRUPTION—ARISING OUT OF OR IN CONNECTION WITH RELIANCE ON ANY MODEL OUTPUT OR BENCHMARK DATA.
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. COOKIE POLICY & INLINE PREFERENCES -->
+    <section id="cookies" class="legal-section rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-mono font-bold text-[11px] uppercase">
+          Storage &amp; Consent Controls
+        </span>
+        <span class="text-xs font-mono text-slate-500">Section 04 · Cookie Policy</span>
+      </div>
+
+      <h2 class="font-display font-bold text-xl sm:text-2xl text-ink">
+        4. Cookie Policy &amp; Preference Manager
+      </h2>
+
+      <p class="text-sm text-slate-600 leading-relaxed">
+        Metal Prediction uses lightweight browser storage (<code>localStorage</code> and <code>sessionStorage</code>) to keep the terminal secure, remember your consent decision, and optionally save your preferred metal and currency.
+      </p>
+
+      <div class="space-y-3">
+        <div class="rounded-2xl bg-alabaster border border-slate-200 p-4 flex items-center justify-between gap-4">
+          <div>
+            <div class="font-display font-bold text-sm text-ink">Essential Storage (Strictly Necessary)</div>
+            <div class="text-xs text-slate-600 mt-0.5">
+              Stores your cookie consent choice (<code>mp_cookie_consent_v1</code>), first-visit startup reveal flag (<code>mp_startup_seen_v1</code>), and ephemeral AI chat session ID (<code>chatSession</code>).
+            </div>
+          </div>
+          <span class="shrink-0 px-2.5 py-1 rounded-full bg-ink text-volt font-mono font-bold text-[10.5px]">
+            Always Active
+          </span>
+        </div>
+
+        <label class="rounded-2xl bg-white border border-slate-200 p-4 flex items-center justify-between gap-4 cursor-pointer">
+          <div>
+            <div class="font-display font-bold text-sm text-ink">Functional Preferences</div>
+            <div class="text-xs text-slate-600 mt-0.5">
+              Remembers your active metal watchlist selection, currency toggle (MCX INR / Global USD), and preferred horizon across visits (<code>mp_functional_prefs_v1</code>).
+            </div>
+          </div>
+          <input id="legalCookieFunctional" type="checkbox" class="w-5 h-5 accent-[#0E7CE6] cursor-pointer shrink-0" />
+        </label>
+
+        <label class="rounded-2xl bg-white border border-slate-200 p-4 flex items-center justify-between gap-4 cursor-pointer">
+          <div>
+            <div class="font-display font-bold text-sm text-ink">Analytics &amp; Telemetry</div>
+            <div class="text-xs text-slate-600 mt-0.5">
+              Helps evaluate model interaction latency and page stability in aggregate without cross-site advertising trackers.
+            </div>
+          </div>
+          <input id="legalCookieAnalytics" type="checkbox" class="w-5 h-5 accent-[#0E7CE6] cursor-pointer shrink-0" />
+        </label>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3 pt-1">
+        <button type="button" onclick="saveLegalCookiePrefs()"
+          class="px-5 py-2.5 rounded-full bg-ink hover:bg-slate-800 text-volt font-display font-bold text-xs cursor-pointer transition-colors">
+          Save Cookie Preferences
+        </button>
+        <button type="button" onclick="setLegalConsentPreset(true)"
+          class="px-4 py-2.5 rounded-full bg-volt hover:bg-volt-hover text-ink font-display font-bold text-xs cursor-pointer transition-colors">
+          Accept All
+        </button>
+        <button type="button" onclick="setLegalConsentPreset(false)"
+          class="px-4 py-2.5 rounded-full border border-slate-300 hover:border-ink text-xs font-semibold text-ink cursor-pointer transition-colors">
+          Reject Non-Essential
+        </button>
+        <span id="legalCookieSavedMsg" class="text-xs font-mono text-emerald-700 hidden">
+          Preferences saved to localStorage.
+        </span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-200 bg-alabaster py-6 px-4 sm:px-8 text-xs text-slate-500">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <span>© 2026 Metal Prediction · Algorithmic Commodity Intelligence (Non-SEBI Registered)</span>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="/" class="hover:text-ink font-medium">Forecast Terminal</a>
+        <a href="/#supportSection" class="hover:text-ink font-medium">Contact &amp; FAQ</a>
+        <a href="/disclaimer" class="hover:text-ink font-medium">Disclaimer</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CONSENT_KEY = 'mp_cookie_consent_v1';
+
+    function highlightActiveRouteSection() {
+      const pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+      const hashSlug = window.location.hash.replace('#', '').toLowerCase();
+      const target = ['disclaimer', 'privacy', 'terms', 'cookies'].includes(hashSlug)
+        ? hashSlug
+        : (['disclaimer', 'privacy', 'terms', 'cookies'].includes(pathSlug) ? pathSlug : 'disclaimer');
+
+      document.querySelectorAll('[data-legal-tab]').forEach((el) => {
+        el.classList.toggle('is-active', el.dataset.legalTab === target);
+      });
+
+      if (!window.location.hash && ['privacy', 'terms', 'cookies'].includes(pathSlug)) {
+        const sectionEl = document.getElementById(pathSlug);
+        if (sectionEl) {
+          requestAnimationFrame(() => sectionEl.scrollIntoView({ behavior: 'smooth' }));
+        }
+      }
+    }
+
+    function loadLegalCookieInputs() {
+      let prefs = { essential: true, functional: false, analytics: false };
+      try {
+        const raw = localStorage.getItem(CONSENT_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          prefs.functional = Boolean(parsed.functional);
+          prefs.analytics = Boolean(parsed.analytics);
+        }
+      } catch (_e) {}
+      document.getElementById('legalCookieFunctional').checked = prefs.functional;
+      document.getElementById('legalCookieAnalytics').checked = prefs.analytics;
+    }
+
+    function persistLegalConsent(functional, analytics) {
+      const payload = {
+        essential: true,
+        functional: Boolean(functional),
+        analytics: Boolean(analytics),
+        updatedAt: new Date().toISOString()
+      };
+      try {
+        localStorage.setItem(CONSENT_KEY, JSON.stringify(payload));
+        if (!payload.functional) localStorage.removeItem('mp_functional_prefs_v1');
+      } catch (_e) {}
+      loadLegalCookieInputs();
+      const msg = document.getElementById('legalCookieSavedMsg');
+      if (msg) {
+        msg.classList.remove('hidden');
+        setTimeout(() => msg.classList.add('hidden'), 3000);
+      }
+    }
+
+    function saveLegalCookiePrefs() {
+      const func = document.getElementById('legalCookieFunctional').checked;
+      const anal = document.getElementById('legalCookieAnalytics').checked;
+      persistLegalConsent(func, anal);
+    }
+
+    function setLegalConsentPreset(allowAll) {
+      persistLegalConsent(allowAll, allowAll);
+    }
+
+    function clearAllLocalBrowserData() {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (_e) {}
+      loadLegalCookieInputs();
+      const msg = document.getElementById('localClearStatus');
+      if (msg) msg.classList.remove('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      highlightActiveRouteSection();
+      loadLegalCookieInputs();
+    });
+    window.addEventListener('hashchange', highlightActiveRouteSection);
+  </script>
+</body>
+
+</html>

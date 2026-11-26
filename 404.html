@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Route Not Found · Metal Prediction</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            brand: ['"DM Serif Display"', 'Georgia', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ink: '#0A0E17',
+            alabaster: '#F4F5F7',
+            volt: { DEFAULT: '#D4FF59', hover: '#C5F442' },
+            azure: { deep: '#0758A8', mid: '#0E7CE6' },
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="min-h-screen bg-white text-ink flex flex-col justify-between selection:bg-volt selection:text-ink">
+
+  <header class="w-full border-b border-slate-100 px-5 sm:px-10 py-4">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5">
+        <img src="/logo.svg" alt="Metal Prediction" class="w-9 h-9 rounded-[9px] shadow-sm shrink-0" />
+        <span class="font-brand text-lg text-ink">Metal Prediction</span>
+      </a>
+      <a href="/"
+        class="px-4 py-2 rounded-full bg-ink hover:bg-slate-800 text-volt font-display font-bold text-xs transition-colors">
+        Return Home →
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center px-4 py-14">
+    <div class="max-w-xl w-full rounded-3xl bg-alabaster border border-slate-200 p-7 sm:p-10 text-center space-y-5 shadow-sm">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-mono font-bold text-azure-mid uppercase">
+        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+        <span>HTTP 404 · Route Not Found</span>
+      </div>
+
+      <h1 class="font-display font-extrabold text-5xl sm:text-6xl text-ink tracking-tight tabular-nums">
+        404
+      </h1>
+
+      <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+        The endpoint or page you requested does not exist in our 5-metal quantitative terminal
+        (<strong>Gold, Silver, Platinum, Copper, Aluminium</strong>).
+      </p>
+
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+        <a href="/"
+          class="px-5 py-2.5 rounded-full bg-volt hover:bg-volt-hover text-ink font-display font-bold text-xs tracking-wide uppercase shadow-sm transition-colors">
+          Return to Forecast Terminal
+        </a>
+        <a href="/#supportSection"
+          class="px-5 py-2.5 rounded-full bg-white border border-slate-300 hover:border-ink text-ink font-display font-semibold text-xs transition-colors">
+          Support &amp; FAQ
+        </a>
+        <a href="/disclaimer"
+          class="px-4 py-2.5 rounded-full text-slate-600 hover:text-ink font-semibold text-xs underline underline-offset-4">
+          Financial Disclaimer
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-100 py-5 px-4 text-center text-xs text-slate-400 font-mono">
+    Metal Prediction · Algorithmic Commodity Estimates Only · Non-SEBI Registered
+  </footer>
+
+</body>
+
+</html>

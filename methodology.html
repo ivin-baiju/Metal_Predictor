@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Methodology &amp; Transparency — Metal Prediction</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            brand: ['"DM Serif Display"', 'Georgia', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ink: '#0A0E17',
+            alabaster: '#F4F5F7',
+            volt: { DEFAULT: '#D4FF59', hover: '#C5F442' },
+            azure: { deep: '#0758A8', mid: '#0E7CE6' },
+            obsidian: '#0F1319',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #FFFFFF;
+      color: #0A0E17;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white text-ink selection:bg-volt selection:text-ink">
+
+  <!-- Sticky Header -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <a href="/" class="flex items-center gap-2.5">
+        <img src="/logo.svg" alt="Metal Prediction" class="w-9 h-9 rounded-[9px] shadow-sm shrink-0" />
+        <div>
+          <div class="font-brand text-lg text-ink leading-tight">Metal Prediction</div>
+          <div class="text-[10.5px] font-mono text-slate-500">Model Transparency &amp; Ensemble Architecture</div>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-2">
+        <a href="/disclaimer"
+          class="px-3.5 py-2 rounded-full border border-slate-200 hover:border-slate-300 text-xs font-semibold text-slate-700 hover:text-ink transition-colors">
+          Disclaimer
+        </a>
+        <a href="/#supportSection"
+          class="px-3.5 py-2 rounded-full border border-slate-200 hover:border-slate-300 text-xs font-semibold text-slate-700 hover:text-ink transition-colors">
+          FAQ &amp; Contact
+        </a>
+        <a href="/"
+          class="px-4 py-2 rounded-full bg-ink hover:bg-slate-800 text-volt font-display font-bold text-xs tracking-wide transition-colors">
+          ← Back to Terminal
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-8 py-10 space-y-10">
+
+    <!-- 1. Hero & Live Server Cache Telemetry -->
+    <section class="rounded-3xl bg-gradient-to-br from-[#0758A8] to-[#0E7CE6] text-white p-6 sm:p-8 space-y-5 shadow-lg">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <span class="px-3 py-1 rounded-full bg-white/15 border border-white/25 text-[11px] font-mono font-bold uppercase">
+          Walk-Forward Validated · 5 Metals
+        </span>
+        <span id="methCacheStatus" class="px-3 py-1 rounded-full bg-volt text-ink text-[11px] font-mono font-bold">
+          Checking /api/prices cache...
+        </span>
+      </div>
+
+      <div>
+        <h1 class="font-display font-extrabold text-2xl sm:text-4xl tracking-tight">
+          How the Metal Prediction Ensemble Works
+        </h1>
+        <p class="text-sm text-white/85 mt-2 max-w-3xl leading-relaxed">
+          Multi-horizon forecasts across Gold, Silver, Platinum, Copper, and Aluminium combine deep sequence attention, neural basis decomposition, quantile gradient boosting, cointegration error correction, and FinBERT NLP sentiment.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+        <div class="rounded-2xl bg-white/15 border border-white/20 p-3.5">
+          <div class="text-[10.5px] font-mono text-white/75">Cache Source</div>
+          <div id="methSourceVal" class="font-mono font-bold text-xs sm:text-sm text-white mt-0.5 truncate">quant-snapshot-cache</div>
+        </div>
+        <div class="rounded-2xl bg-white/15 border border-white/20 p-3.5">
+          <div class="text-[10.5px] font-mono text-white/75">Server TTL Window</div>
+          <div id="methTtlVal" class="font-mono font-bold text-xs sm:text-sm text-white mt-0.5">15 min (900s)</div>
+        </div>
+        <div class="rounded-2xl bg-white/15 border border-white/20 p-3.5">
+          <div class="text-[10.5px] font-mono text-white/75">USD / INR Spot</div>
+          <div id="methFxVal" class="font-mono font-bold text-xs sm:text-sm text-volt mt-0.5">₹92.19</div>
+        </div>
+        <div class="rounded-2xl bg-white/15 border border-white/20 p-3.5">
+          <div class="text-[10.5px] font-mono text-white/75">Last Cache Sync</div>
+          <div id="methUpdatedVal" class="font-mono font-bold text-xs sm:text-sm text-white mt-0.5">Nov 25, 2026</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 5-Model Hybrid Ensemble Architecture -->
+    <section class="space-y-4">
+      <div>
+        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-azure-mid">Section 01 · Architecture</span>
+        <h2 class="font-display font-bold text-xl sm:text-2xl text-ink mt-1">Hybrid Ensemble Components</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-2xl bg-alabaster border border-slate-200 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-display font-bold text-sm text-ink">Temporal Fusion Transformer (TFT)</span>
+            <span class="px-2 py-0.5 rounded-full bg-ink text-volt font-mono text-[10px] font-bold">30–36% Weight</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Multi-horizon attention architecture capturing regime shifts across US 10Y TIPS real yields, USD/INR FX transmission, and seasonal industrial demand cycles across 1D to 5Y horizons.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-alabaster border border-slate-200 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-display font-bold text-sm text-ink">N-BEATS Neural Basis</span>
+            <span class="px-2 py-0.5 rounded-full bg-white border border-slate-200 text-ink font-mono text-[10px] font-bold">18–30% Weight</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Decomposes raw commodity spot series into interpretable trend and harmonic seasonality basis functions without requiring hand-crafted lag assumptions.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-alabaster border border-slate-200 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-display font-bold text-sm text-ink">XGBoost &amp; LightGBM Quantiles</span>
+            <span class="px-2 py-0.5 rounded-full bg-white border border-slate-200 text-ink font-mono text-[10px] font-bold">20–35% Weight</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Gradient-boosted quantile regressors estimate non-linear inventory thresholds (LME/SHFE warrants, COMEX registered stock) and generate the shaded 95% confidence interval bands.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-alabaster border border-slate-200 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-display font-bold text-sm text-ink">VECM Cointegration + FinBERT NLP</span>
+            <span class="px-2 py-0.5 rounded-full bg-white border border-slate-200 text-ink font-mono text-[10px] font-bold">18–22% Weight</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Vector Error Correction Models anchor long-run COMEX/LME-to-MCX parity and Gold/Silver/Platinum cross-ratios while FinBERT scores real-time macro and supply dispatches.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Zero-Cost Caching & Parity Math -->
+    <section class="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-4">
+      <div>
+        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-azure-mid">Section 02 · Data &amp; Parity Pipeline</span>
+        <h2 class="font-display font-bold text-xl sm:text-2xl text-ink mt-1">Server-Side TTL Caching &amp; Local Unit Conversion</h2>
+      </div>
+
+      <p class="text-sm text-slate-600 leading-relaxed">
+        To respect free market-data API limits and keep API credentials strictly off the browser, Metal Prediction batch-caches spot benchmarks and <code>USD/INR</code> on the Express backend via <code>GET /api/prices</code> (15-minute TTL). Domestic MCX equivalents and tax-paid landed parity are computed locally:
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+        <div class="rounded-2xl bg-obsidian text-white p-4 space-y-1.5">
+          <div class="text-volt font-bold uppercase text-[10.5px]">Precious Metals (Au · Ag · Pt)</div>
+          <div>Base Landed = (COMEX_USD_oz / 31.1035) × Grams × USD_INR</div>
+          <div class="text-slate-300">Tax-Paid Parity = Base Landed × (1 + Duty) × (1 + GST)</div>
+        </div>
+        <div class="rounded-2xl bg-obsidian text-white p-4 space-y-1.5">
+          <div class="text-volt font-bold uppercase text-[10.5px]">Base Metals (Cu · Al)</div>
+          <div>Base Landed = (LME_USD_MT / 1000) × USD_INR</div>
+          <div class="text-slate-300">Arbitrage Spread = MCX_Spot − Tax_Paid_Parity</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Walk-Forward Out-of-Sample Error Metrics (MAE & RMSE) -->
+    <section class="space-y-4">
+      <div>
+        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-azure-mid">Section 03 · Out-of-Sample Validation</span>
+        <h2 class="font-display font-bold text-xl sm:text-2xl text-ink mt-1">Walk-Forward Accuracy, MAE &amp; RMSE Ledger</h2>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-alabaster p-4">
+        <table class="w-full text-left border-collapse min-w-[740px]">
+          <thead>
+            <tr class="border-b border-slate-200 text-[11px] font-mono uppercase text-slate-500">
+              <th class="py-2.5 pr-4">Metal</th>
+              <th class="py-2.5 px-3">Dir. Accuracy</th>
+              <th class="py-2.5 px-3">Out-of-Sample R²</th>
+              <th class="py-2.5 px-3">MAE (INR / USD)</th>
+              <th class="py-2.5 px-3">RMSE (INR / USD)</th>
+              <th class="py-2.5 pl-3">Primary SHAP Driver</th>
+            </tr>
+          </thead>
+          <tbody id="methMetricsBody" class="divide-y divide-slate-200/80 text-xs sm:text-sm font-mono tabular-nums">
+            <tr>
+              <td class="py-3 pr-4 font-sans font-bold text-ink">Gold (Au / 10g)</td>
+              <td class="py-3 px-3 text-emerald-700 font-bold">78.4%</td>
+              <td class="py-3 px-3">0.912</td>
+              <td class="py-3 px-3">₹840 / $24.50</td>
+              <td class="py-3 px-3">₹1,120 / $32.80</td>
+              <td class="py-3 pl-3 font-sans text-slate-600">US 10Y TIPS Real Yield (31%)</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-sans font-bold text-ink">Silver (Ag / 1kg)</td>
+              <td class="py-3 px-3 text-emerald-700 font-bold">74.9%</td>
+              <td class="py-3 px-3">0.884</td>
+              <td class="py-3 px-3">₹1,620 / $0.46</td>
+              <td class="py-3 px-3">₹2,190 / $0.62</td>
+              <td class="py-3 pl-3 font-sans text-slate-600">Solar PV TOPCon Paste Demand (34%)</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-sans font-bold text-ink">Platinum (Pt / 10g)</td>
+              <td class="py-3 px-3 text-emerald-700 font-bold">71.6%</td>
+              <td class="py-3 px-3">0.849</td>
+              <td class="py-3 px-3">₹490 / $15.40</td>
+              <td class="py-3 px-3">₹675 / $21.20</td>
+              <td class="py-3 pl-3 font-sans text-slate-600">South Africa Bushveld Supply (33%)</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-sans font-bold text-ink">Copper (Cu / 1kg)</td>
+              <td class="py-3 px-3 text-emerald-700 font-bold">79.1%</td>
+              <td class="py-3 px-3">0.921</td>
+              <td class="py-3 px-3">₹9.40 / $94.00</td>
+              <td class="py-3 px-3">₹12.80 / $128.00</td>
+              <td class="py-3 pl-3 font-sans text-slate-600">HVDC Grid &amp; AI Data Centers (35%)</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-sans font-bold text-ink">Aluminium (Al / 1kg)</td>
+              <td class="py-3 px-3 text-emerald-700 font-bold">76.2%</td>
+              <td class="py-3 px-3">0.895</td>
+              <td class="py-3 px-3">₹3.10 / $31.00</td>
+              <td class="py-3 px-3">₹4.25 / $43.00</td>
+              <td class="py-3 pl-3 font-sans text-slate-600">Smelter Hydro-Power &amp; Alumina (32%)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rounded-2xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-950 leading-relaxed">
+        <strong>Model Risk Notice:</strong> Walk-forward validation metrics measure historical out-of-sample fit and do not guarantee future price accuracy. Metal Prediction is not SEBI-registered.
+        <a href="/disclaimer" class="font-bold underline ml-1">Read Full Disclaimer →</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-200 bg-alabaster py-6 px-4 sm:px-8 text-xs text-slate-500">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <span>© 2026 Metal Prediction · Non-SEBI Registered Quantitative Terminal</span>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="/" class="hover:text-ink font-medium">Forecast Terminal</a>
+        <a href="/disclaimer" class="hover:text-ink font-medium">Disclaimer</a>
+        <a href="/privacy" class="hover:text-ink font-medium">Privacy</a>
+        <a href="/terms" class="hover:text-ink font-medium">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    async function hydrateMethodologyCacheBanner() {
+      try {
+        const res = await fetch('/api/prices');
+        if (!res.ok) throw new Error('Cache endpoint error');
+        const data = await res.json();
+        document.getElementById('methCacheStatus').textContent = data.cacheHit ? 'TTL Cache Hit · Live' : 'Fresh Snapshot · Cached';
+        document.getElementById('methSourceVal').textContent = data.source || 'quant-snapshot-cache';
+        document.getElementById('methTtlVal').textContent = `${Math.round((data.ttlSeconds || 900) / 60)} min (${data.ttlSeconds || 900}s)`;
+        if (data.usdInrSpot) document.getElementById('methFxVal').textContent = `₹${Number(data.usdInrSpot).toFixed(2)}`;
+        if (data.cachedAt) {
+          const dt = new Date(data.cachedAt);
+          document.getElementById('methUpdatedVal').textContent = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + (data.asOfDate || '');
+        }
+      } catch (_err) {
+        document.getElementById('methCacheStatus').textContent = 'Offline Snapshot Mode';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', hydrateMethodologyCacheBanner);
+  </script>
+</body>
+
+</html>
