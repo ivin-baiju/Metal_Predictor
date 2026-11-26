@@ -1,12 +1,22 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import "dotenv/config";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getMetalChatbot } from "./chatbot_engine.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load dynamically trained real-market commodity ML models if available
+let trainedCommodityModels = null;
+try {
+  const modelFile = path.join(__dirname, "model", "trained_commodity_models.json");
+  if (fs.existsSync(modelFile)) {
+    trainedCommodityModels = JSON.parse(fs.readFileSync(modelFile, "utf8"));
+  }
+} catch (_e) {}
 
 const app = express();
 app.set("trust proxy", 1);
@@ -266,15 +276,29 @@ let marketPriceCache = { data: null, expiresAt: 0 };
 
 async function buildMarketSnapshot() {
   const snapshot = {
-    asOfDate: METAL_PREDICT_KNOWLEDGE.asOfDate,
-    usdInrSpot: METAL_PREDICT_KNOWLEDGE.usdInrSpot,
+    asOfDate: trainedCommodityModels?.metadata?.asOfDate || METAL_PREDICT_KNOWLEDGE.asOfDate,
+    usdInrSpot: trainedCommodityModels?.metadata?.usdinrSpot || METAL_PREDICT_KNOWLEDGE.usdInrSpot,
     troyOzGrams: METAL_PREDICT_KNOWLEDGE.troyOzGrams,
-    source: "quant-snapshot-cache",
+    source: trainedCommodityModels ? "trained-ml-pipeline" : "quant-snapshot-cache",
     metals: {}
   };
 
   for (const [key, m] of Object.entries(METAL_PREDICT_KNOWLEDGE.metals)) {
     snapshot.metals[key] = { ...m };
+    if (trainedCommodityModels?.forecast_snapshot?.[key]) {
+      const liveM = trainedCommodityModels.forecast_snapshot[key];
+      snapshot.metals[key].globalSpotUsd = liveM.globalSpotUsd;
+      snapshot.metals[key].mcxSpotInr = liveM.mcxSpotInr;
+      snapshot.metals[key].baseLandedInr = liveM.baseLandedInr;
+      snapshot.metals[key].taxPaidParityInr = liveM.taxPaidParityInr;
+      snapshot.metals[key].paritySpreadPct = liveM.paritySpreadPct;
+      snapshot.metals[key].dayChangePct = liveM.dayChangePct;
+      snapshot.metals[key].accuracy = liveM.accuracy;
+      snapshot.metals[key].r2 = liveM.r2;
+      snapshot.metals[key].maeInr = liveM.maeInr;
+      snapshot.metals[key].rmseInr = liveM.rmseInr;
+      snapshot.metals[key].forecasts = liveM.forecasts;
+    }
   }
 
   const metalApiKey = process.env.METALPRICE_API_KEY ? process.env.METALPRICE_API_KEY.trim() : "";
