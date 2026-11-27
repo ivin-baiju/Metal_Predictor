@@ -213,7 +213,7 @@ app.get("/api/status", (_req, res) => {
   });
 });
 
-app.post("/api/chat", (req, res) => {
+app.post("/api/chat", async (req, res) => {
   const { message, sessionId, context } = req.body || {};
 
   if (
@@ -226,18 +226,33 @@ app.post("/api/chat", (req, res) => {
     return res.status(400).json({ error: "Invalid message or session." });
   }
 
-  const result = metalChatbot.reply(message, sessionId, context || {}, METAL_PREDICT_KNOWLEDGE);
+  let knowledge = METAL_PREDICT_KNOWLEDGE;
+  try {
+    const liveSnap = await getMarketSnapshot();
+    knowledge = {
+      ...METAL_PREDICT_KNOWLEDGE,
+      asOfDate: liveSnap.asOfDate,
+      usdInrSpot: liveSnap.usdInrSpot,
+      metals: liveSnap.metals
+    };
+  } catch (_err) {
+    // Fall back to baseline knowledge if snapshot generation fails
+  }
+
+  const result = metalChatbot.reply(message, sessionId, context || {}, knowledge);
   return res.json(result);
 });
 
 // Health Check Endpoint for API-Offline Detection
 app.get("/api/health", (_req, res) => {
+  const fallbackDates = formatAsOfDates(new Date());
   res.json({
     status: "ok",
     mode: "local-trained-ml",
     model: "MetalNLP-v1",
     nlpModel: metalChatbot.getMetadata(),
-    asOfDate: METAL_PREDICT_KNOWLEDGE.asOfDate,
+    asOfDate: marketPriceCache.data?.asOfDate || fallbackDates.long,
+    priceSource: marketPriceCache.data?.source || "pending",
     timestamp: new Date().toISOString()
   });
 });
@@ -272,11 +287,57 @@ app.post("/api/contact", (req, res) => {
 // ZERO-COST SERVER-SIDE TTL CACHE FOR /api/prices (PROTECTS FREE API QUOTAS)
 // ============================================================================
 const PRICE_CACHE_TTL_MS = (Number(process.env.PRICE_CACHE_TTL_SECONDS) || 900) * 1000;
+const LB_TO_MT = 2204.62262;
 let marketPriceCache = { data: null, expiresAt: 0 };
 
+function formatAsOfDates(dateObj) {
+  const d = dateObj instanceof Date && !Number.isNaN(dateObj.getTime()) ? dateObj : new Date();
+  return {
+    long: new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" }).format(d),
+    short: new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(d),
+    iso: d.toISOString()
+  };
+}
+
+async function fetchYahooQuote(ticker) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d`;
+    const resp = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0" },
+      signal: controller.signal
+    });
+    if (!resp.ok) return null;
+    const payload = await resp.json();
+    const meta = payload?.chart?.result?.[0]?.meta;
+    if (!meta || !Number.isFinite(meta.regularMarketPrice)) return null;
+
+    let changePct = meta.regularMarketChangePercent;
+    if (!Number.isFinite(changePct) && Number.isFinite(meta.chartPreviousClose) && meta.chartPreviousClose > 0) {
+      changePct = ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose) * 100;
+    }
+    const marketTimeMs = Number.isFinite(meta.regularMarketTime) ? meta.regularMarketTime * 1000 : Date.now();
+    return {
+      price: meta.regularMarketPrice,
+      changePct: Number.isFinite(changePct) ? changePct : 0,
+      marketTimeMs
+    };
+  } catch (_err) {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function buildMarketSnapshot() {
+  const fallbackDates = formatAsOfDates(
+    trainedCommodityModels?.metadata?.asOfDate ? new Date(trainedCommodityModels.metadata.asOfDate) : new Date()
+  );
   const snapshot = {
-    asOfDate: trainedCommodityModels?.metadata?.asOfDate || METAL_PREDICT_KNOWLEDGE.asOfDate,
+    asOfDate: trainedCommodityModels?.metadata?.asOfDate || METAL_PREDICT_KNOWLEDGE.asOfDate || fallbackDates.long,
+    asOfDateShort: fallbackDates.short,
+    asOfIso: fallbackDates.iso,
     usdInrSpot: trainedCommodityModels?.metadata?.usdinrSpot || METAL_PREDICT_KNOWLEDGE.usdInrSpot,
     troyOzGrams: METAL_PREDICT_KNOWLEDGE.troyOzGrams,
     source: trainedCommodityModels ? "trained-ml-pipeline" : "quant-snapshot-cache",
@@ -287,7 +348,10 @@ async function buildMarketSnapshot() {
     snapshot.metals[key] = { ...m };
     if (trainedCommodityModels?.forecast_snapshot?.[key]) {
       const liveM = trainedCommodityModels.forecast_snapshot[key];
-      snapshot.metals[key].globalSpotUsd = liveM.globalSpotUsd;
+      snapshot.metals[key].globalSpotUsd =
+        key === "copper" && Number.isFinite(liveM.globalSpotUsd) && liveM.globalSpotUsd < 100
+          ? Number((liveM.globalSpotUsd * LB_TO_MT).toFixed(2))
+          : liveM.globalSpotUsd;
       snapshot.metals[key].mcxSpotInr = liveM.mcxSpotInr;
       snapshot.metals[key].baseLandedInr = liveM.baseLandedInr;
       snapshot.metals[key].taxPaidParityInr = liveM.taxPaidParityInr;
@@ -299,6 +363,73 @@ async function buildMarketSnapshot() {
       snapshot.metals[key].rmseInr = liveM.rmseInr;
       snapshot.metals[key].forecasts = liveM.forecasts;
     }
+  }
+
+  // Live free Yahoo Finance quotes for USD/INR and all 5 metals
+  const yahooSpecs = [
+    { key: "usdinr", ticker: "INR=X", minVal: 60, maxVal: 140 },
+    { key: "gold", ticker: "GC=F", grams: 10, minUsd: 1500, maxUsd: 10000, roundInt: true, isBaseMetal: false },
+    { key: "silver", ticker: "SI=F", grams: 1000, minUsd: 15, maxUsd: 200, roundInt: true, isBaseMetal: false },
+    { key: "platinum", ticker: "PL=F", grams: 10, minUsd: 500, maxUsd: 4000, roundInt: true, isBaseMetal: false },
+    { key: "copper", ticker: "HG=F", mult: LB_TO_MT, minUsd: 5000, maxUsd: 25000, roundInt: false, isBaseMetal: true },
+    { key: "aluminum", ticker: "ALI=F", mult: 1, minUsd: 1200, maxUsd: 6000, roundInt: false, isBaseMetal: true }
+  ];
+
+  const settled = await Promise.allSettled(yahooSpecs.map((s) => fetchYahooQuote(s.ticker)));
+  const quotes = {};
+  let latestMarketTimeMs = 0;
+
+  yahooSpecs.forEach((spec, idx) => {
+    const res = settled[idx];
+    if (res.status === "fulfilled" && res.value) {
+      quotes[spec.key] = res.value;
+      if (res.value.marketTimeMs > latestMarketTimeMs) {
+        latestMarketTimeMs = res.value.marketTimeMs;
+      }
+    }
+  });
+
+  if (quotes.usdinr && quotes.usdinr.price >= 60 && quotes.usdinr.price <= 140) {
+    snapshot.usdInrSpot = Number(quotes.usdinr.price.toFixed(2));
+  }
+
+  let updatedYahoo = false;
+  for (const spec of yahooSpecs) {
+    if (spec.key === "usdinr") continue;
+    const quote = quotes[spec.key];
+    if (!quote) continue;
+    const usdVal = spec.mult ? quote.price * spec.mult : quote.price;
+    if (!Number.isFinite(usdVal) || usdVal < spec.minUsd || usdVal > spec.maxUsd) continue;
+
+    const m = snapshot.metals[spec.key];
+    const prevParity = m.taxPaidParityInr || m.baseLandedInr * 1.0918;
+    const prevPremiumRatio = prevParity > 0 ? m.mcxSpotInr / prevParity : 1;
+    const baseLanded = spec.isBaseMetal
+      ? (usdVal / 1000) * snapshot.usdInrSpot
+      : (usdVal / METAL_PREDICT_KNOWLEDGE.troyOzGrams) * spec.grams * snapshot.usdInrSpot;
+    const taxPaid = baseLanded * 1.0918;
+    const mcxSpot = taxPaid * prevPremiumRatio;
+
+    m.globalSpotUsd = Number(usdVal.toFixed(2));
+    m.baseLandedInr = spec.roundInt ? Math.round(baseLanded) : Number(baseLanded.toFixed(2));
+    m.taxPaidParityInr = spec.roundInt ? Math.round(taxPaid) : Number(taxPaid.toFixed(2));
+    m.mcxSpotInr = spec.roundInt ? Math.round(mcxSpot) : Number(mcxSpot.toFixed(2));
+    m.paritySpreadInr = spec.roundInt
+      ? Math.round(m.mcxSpotInr - m.taxPaidParityInr)
+      : Number((m.mcxSpotInr - m.taxPaidParityInr).toFixed(2));
+    m.paritySpreadPct = Number(((m.paritySpreadInr / m.taxPaidParityInr) * 100).toFixed(2));
+    if (Number.isFinite(quote.changePct) && quote.changePct !== 0) {
+      m.dayChangePct = Number(quote.changePct.toFixed(2));
+    }
+    updatedYahoo = true;
+  }
+
+  if (updatedYahoo) {
+    const liveDates = formatAsOfDates(latestMarketTimeMs > 0 ? new Date(latestMarketTimeMs) : new Date());
+    snapshot.source = "yahoo-finance-live";
+    snapshot.asOfDate = liveDates.long;
+    snapshot.asOfDateShort = liveDates.short;
+    snapshot.asOfIso = liveDates.iso;
   }
 
   const metalApiKey = process.env.METALPRICE_API_KEY ? process.env.METALPRICE_API_KEY.trim() : "";
@@ -320,9 +451,9 @@ async function buildMarketSnapshot() {
         }
 
         const preciousMap = [
-          { key: "gold", code: "USDXAU", grams: 10, minUsd: 1500, maxUsd: 8000, roundInt: true },
-          { key: "silver", code: "USDXAG", grams: 1000, minUsd: 15, maxUsd: 150, roundInt: true },
-          { key: "platinum", code: "USDXPT", grams: 10, minUsd: 500, maxUsd: 3500, roundInt: true }
+          { key: "gold", code: "USDXAU", grams: 10, minUsd: 1500, maxUsd: 10000, roundInt: true },
+          { key: "silver", code: "USDXAG", grams: 1000, minUsd: 15, maxUsd: 200, roundInt: true },
+          { key: "platinum", code: "USDXPT", grams: 10, minUsd: 500, maxUsd: 4000, roundInt: true }
         ];
 
         let updatedAny = false;
@@ -344,10 +475,16 @@ async function buildMarketSnapshot() {
             updatedAny = true;
           }
         }
-        if (updatedAny) snapshot.source = "metalpriceapi-cached";
+        if (updatedAny) {
+          const apiDates = formatAsOfDates(new Date());
+          snapshot.source = "metalpriceapi-live";
+          snapshot.asOfDate = apiDates.long;
+          snapshot.asOfDateShort = apiDates.short;
+          snapshot.asOfIso = apiDates.iso;
+        }
       }
     } catch (_err) {
-      // Keep deterministic snapshot cache on timeout/upstream failure
+      // Keep Yahoo / deterministic snapshot cache on timeout/upstream failure
     }
   }
 
@@ -358,18 +495,23 @@ async function buildMarketSnapshot() {
   return snapshot;
 }
 
+async function getMarketSnapshot() {
+  if (marketPriceCache.data && Date.now() < marketPriceCache.expiresAt) {
+    return { ...marketPriceCache.data, cacheHit: true };
+  }
+  const fresh = await buildMarketSnapshot();
+  marketPriceCache = {
+    data: fresh,
+    expiresAt: Date.now() + PRICE_CACHE_TTL_MS
+  };
+  return { ...fresh, cacheHit: false };
+}
+
 // Server-Side TTL-Cached 5-Metal Spot & Parity Endpoint
 app.get("/api/prices", async (_req, res) => {
   try {
-    if (marketPriceCache.data && Date.now() < marketPriceCache.expiresAt) {
-      return res.json({ ...marketPriceCache.data, cacheHit: true });
-    }
-    const fresh = await buildMarketSnapshot();
-    marketPriceCache = {
-      data: fresh,
-      expiresAt: Date.now() + PRICE_CACHE_TTL_MS
-    };
-    return res.json({ ...fresh, cacheHit: false });
+    const snap = await getMarketSnapshot();
+    return res.json(snap);
   } catch (_err) {
     return res.status(500).json({ error: "Unable to build cached market snapshot." });
   }

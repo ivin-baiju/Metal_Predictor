@@ -1396,9 +1396,9 @@
           <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
             <div>
               <div class="text-xs text-white/80 flex flex-wrap items-center gap-1.5">
-                <span>Current Spot Benchmark (Nov 25, 2026)</span>
+                <span id="spotBenchmarkLabel">Current Spot Benchmark (Syncing...)</span>
                 <span id="modelLastUpdatedBadge"
-                  class="px-2 py-0.5 rounded-full bg-white/15 font-mono text-[10px] text-white/95">TTL 15m · Synced</span>
+                  class="px-2 py-0.5 rounded-full bg-white/15 font-mono text-[10px] text-white/95">TTL 15m · Syncing</span>
               </div>
               <div id="headerSpotReadout"
                 class="font-mono font-extrabold text-2xl sm:text-3xl text-white tabular-nums mt-0.5">
@@ -2486,7 +2486,8 @@
     // =========================================================================
     // 1. STRICT 5-METAL QUANTITATIVE DATASET (GOLD, SILVER, PLATINUM, COPPER, ALUMINIUM)
     // =========================================================================
-    const BASE_DATE = new Date('2026-11-25T00:00:00');
+    let BASE_DATE = new Date();
+    BASE_DATE.setHours(0, 0, 0, 0);
     let USD_INR_SPOT = 92.19;
     const TROY_OZ_GRAMS = 31.1035;
 
@@ -4116,10 +4117,38 @@
           });
         }
 
+        const benchmarkLabel = document.getElementById('spotBenchmarkLabel');
+        if (benchmarkLabel) {
+          benchmarkLabel.textContent = `Current Spot Benchmark (${data.asOfDateShort || data.asOfDate || 'Live'})`;
+        }
+
+        if (data.asOfIso) {
+          const parsedAsOf = new Date(data.asOfIso);
+          if (!Number.isNaN(parsedAsOf.getTime())) {
+            BASE_DATE = new Date(parsedAsOf.getFullYear(), parsedAsOf.getMonth(), parsedAsOf.getDate());
+            const dateInput = document.getElementById('customDateInput');
+            if (dateInput) {
+              const fmtIsoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+              const minD = new Date(BASE_DATE);
+              minD.setDate(minD.getDate() + 1);
+              const maxD = new Date(BASE_DATE);
+              maxD.setFullYear(maxD.getFullYear() + 5);
+              dateInput.min = fmtIsoDate(minD);
+              dateInput.max = fmtIsoDate(maxD);
+              if (!dateInput.value || dateInput.value === '2026-12-25' || dateInput.value < dateInput.min || dateInput.value > dateInput.max) {
+                const targetD = new Date(BASE_DATE);
+                targetD.setDate(targetD.getDate() + (state.horizonDays || 30));
+                dateInput.value = fmtIsoDate(targetD);
+              }
+            }
+          }
+        }
+
         const badge = document.getElementById('modelLastUpdatedBadge');
         if (badge) {
           const ttlMins = Math.max(1, Math.round((data.ttlSeconds || 900) / 60));
-          badge.textContent = `TTL ${ttlMins}m · ${data.cacheHit ? 'Cached' : 'Fresh'}`;
+          const isLive = typeof data.source === 'string' && data.source.includes('live');
+          badge.textContent = `${isLive ? 'Live' : 'Snapshot'} · TTL ${ttlMins}m · ${data.cacheHit ? 'Cached' : 'Fresh'}`;
         }
 
         renderForecastOverview();
@@ -4387,6 +4416,7 @@
       initSupportForm();
       checkApiHealth(false);
       syncCachedMarketPrices();
+      setInterval(syncCachedMarketPrices, 5 * 60 * 1000);
 
       requestAnimationFrame(refreshAllGliders);
 
